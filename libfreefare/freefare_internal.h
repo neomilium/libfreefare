@@ -6,6 +6,7 @@
 #endif
 
 #include <openssl/des.h>
+#include <sys/types.h>
 
 /*
  * Endienness macros
@@ -24,56 +25,74 @@
  * dealt with).
  */
 
-#if !defined(le32toh) && defined(letoh32)
-    #define le32toh(x) letoh32(x)
-    #define be32toh(x) betoh32(x)
+#if defined(HAVE_SYS_ENDIAN_H)
+    #include <sys/endian.h>
 #endif
 
-#if !defined(le16toh) && defined(letoh16)
-    #define le16toh(x) letoh16(x)
-    #define be16toh(x) betoh16(x)
+#if defined(HAVE_ENDIAN_H)
+    #include <endian.h>
 #endif
 
-#if !defined(le32toh) && defined(HAVE_COREFOUNDATION_COREFOUNDATION_H)
+#if !defined(HAVE_ENDIAN_H) && !defined(HAVE_SYS_ENDIAN_H) && defined(_WIN32)
+#ifdef _WIN32
+    #include <winsock2.h>
+
+    #define be32toh(x) ntohl(x)
+    #define htobe32(x) ntohl(x)
+    #define le32toh(x) (x)
+    #define htole32(x) (x)
+    #define be16toh(x) ntohs(x)
+    #define htobe16(x) htons(x)
+    #define le16toh(x) (x)
+    #define htole16(x) (x)
+#elif defined(HAVE_COREFOUNDATION_COREFOUNDATION_H)
+    #include <CoreFoundation/CoreFoundation.h>
     #define be32toh(x) CFSwapInt32BigToHost(x)
     #define htobe32(x) CFSwapInt32HostToBig(x)
     #define le32toh(x) CFSwapInt32LittleToHost(x)
     #define htole32(x) CFSwapInt32HostToLittle(x)
-#endif
-
-#if !defined(le16toh) && defined(HAVE_COREFOUNDATION_COREFOUNDATION_H)
     #define be16toh(x) CFSwapInt16BigToHost(x)
     #define htobe16(x) CFSwapInt16HostToBig(x)
     #define le16toh(x) CFSwapInt16LittleToHost(x)
     #define htole16(x) CFSwapInt16HostToLittle(x)
-#endif
-
-#if !defined(le32toh) && defined(bswap_32)
+#elif defined(HAVE_BYTESWAP_H)
+    #include <byteswap.h>
     #if BYTE_ORDER == LITTLE_ENDIAN
 	#define be32toh(x) bswap_32(x)
 	#define htobe32(x) bswap_32(x)
 	#define le32toh(x) (x)
 	#define htole32(x) (x)
-    #else
-	#define be32toh(x) (x)
-	#define htobe32(x) (x)
-	#define le32toh(x) bswap_32(x)
-	#define htole32(x) bswap_32(x)
-    #endif
-#endif
-
-#if !defined(htole16) && defined(bswap_16)
-    #if BYTE_ORDER == LITTLE_ENDIAN
 	#define be16toh(x) (bswap_16(x))
 	#define htobe16(x) (bswap_16(x))
 	#define htole16(x) (x)
 	#define le16toh(x) (x)
     #else
+	#define be32toh(x) (x)
+	#define htobe32(x) (x)
+	#define le32toh(x) bswap_32(x)
+	#define htole32(x) bswap_32(x)
 	#define be16toh(x) (x)
 	#define htobe16(x) (x)
 	#define htole16(x) (bswap_16(x))
 	#define le16toh(x) (bswap_16(x))
     #endif
+#endif
+#endif
+
+#if !defined(le32toh) && defined(letoh32)
+    #define le32toh(x) letoh32(x)
+#endif
+
+#if !defined(be32toh) && defined(betoh32)
+    #define be32toh(x) betoh32(x)
+#endif
+
+#if !defined(le16toh) && defined(letoh16)
+    #define le16toh(x) letoh16(x)
+#endif
+
+#if !defined(be16toh) && defined(betoh16)
+    #define be16toh(x) betoh16(x)
 #endif
 
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
