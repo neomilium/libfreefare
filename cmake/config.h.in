@@ -1,8 +1,7 @@
+#ifndef __CONFIG_H__
+#define __CONFIG_H__
 
-#ifndef __CONFIG_POSIX_H__
-#define __CONFIG_POSIX_H__
-
-#cmakedefine _XOPEN_SOURCE @_XOPEN_SOURCE@
+#cmakedefine WITH_DEBUG
 
 #cmakedefine HAVE_SYS_ENDIAN_H @_HAVE_SYS_ENDIAN_H@
 #cmakedefine HAVE_ENDIAN_H @_HAVE_ENDIAN_H@
@@ -15,5 +14,9 @@
 #cmakedefine _XOPEN_SOURCE @_XOPEN_SOURCE@
 #cmakedefine SYSCONFDIR "@SYSCONFDIR@"
 
-#endif /* !__CONFIG_POSIX_H__ */
+#if defined(__MINGW32__) && __MINGW64_VERSION_MAJOR < 3
+#include <winerror.h>
+#define ENOTSUP WSAEOPNOTSUPP
+#endif
 
+#endif /* !__CONFIG_H__ */

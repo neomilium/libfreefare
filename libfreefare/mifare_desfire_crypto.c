@@ -11,26 +11,6 @@
     #include "config.h"
 #endif
 
-#if defined(HAVE_SYS_TYPES_H)
-    #include <sys/types.h>
-#endif
-
-#if defined(HAVE_SYS_ENDIAN_H)
-    #include <sys/endian.h>
-#endif
-
-#if defined(HAVE_ENDIAN_H)
-    #include <endian.h>
-#endif
-
-#if defined(HAVE_COREFOUNDATION_COREFOUNDATION_H)
-    #include <CoreFoundation/CoreFoundation.h>
-#endif
-
-#if defined(HAVE_BYTESWAP_H)
-    #include <byteswap.h>
-#endif
-
 
 #if defined(HAVE_SYS_TYPES_H)
     #include <sys/types.h>
