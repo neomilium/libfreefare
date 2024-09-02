@@ -50,6 +50,7 @@ message("CMAKE_SHARED_LINKER_FLAGS: " ${CMAKE_SHARED_LINKER_FLAGS})
 include_directories(${LIBNFC_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/contrib/libutil)
 set(LIBS ${LIBS} ${LIBNFC_LIBRARIES} ${OPENSSL_LIBRARIES})
 
+option(BUILD_EXAMPLES "build examples ON/OFF" ON)
 option(WITH_DEBUG "Extra debug information is outputted when this is turned on" OFF)
 
 if(DEFINED CMAKE_INSTALL_LIBDIR)
@@ -71,4 +72,7 @@ if(NOT DEFINED SHARE_INSTALL_PREFIX)
 endif(NOT DEFINED SHARE_INSTALL_PREFIX)
 
 add_subdirectory(libfreefare)
-add_subdirectory(examples)
+
+if(BUILD_EXAMPLES)
+  add_subdirectory(examples)
+endif(BUILD_EXAMPLES)
