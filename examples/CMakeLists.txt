@@ -1,4 +1,4 @@
-set(EXAMPLES-SOURCES
+set(EXAMPLES_SOURCES
         mifare-classic-format
         mifare-classic-read-ndef
         mifare-classic-write-ndef
@@ -21,8 +21,8 @@ set(EXAMPLES-SOURCES
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../libfreefare)
 
 # Examples
-foreach(source ${EXAMPLES-SOURCES})
+foreach(source ${EXAMPLES_SOURCES})
   add_executable(${source} ${source}.c)
   target_link_libraries(${source} freefare)
-  install(TARGETS ${source} RUNTIME DESTINATION bin COMPONENT examples)
+  install(TARGETS ${source} RUNTIME COMPONENT examples)
 endforeach(source)
