@@ -18,6 +18,8 @@ add_definitions("-std=c99")
 find_package(LIBNFC REQUIRED)
 find_package(OpenSSL REQUIRED)
 
+include(GNUInstallDirs)
+
 IF(WIN32)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/config_windows.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/include/config.h)
   include_directories(${CMAKE_CURRENT_SOURCE_DIR}/contrib/win32)
@@ -52,23 +54,12 @@ set(LIBS ${LIBS} ${LIBNFC_LIBRARIES} ${OPENSSL_LIBRARIES})
 
 option(WITH_DEBUG "Extra debug information is outputted when this is turned on" OFF)
 
-if(DEFINED CMAKE_INSTALL_LIBDIR)
-  set(libdir ${CMAKE_INSTALL_LIBDIR})
-else(DEFINED CMAKE_INSTALL_LIBDIR)
-  set(CMAKE_INSTALL_LIBDIR lib)
-  set(libdir ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
-endif(DEFINED CMAKE_INSTALL_LIBDIR)
-
-if(DEFINED INCLUDE_INSTALL_DIR)
-  set(includedir ${INCLUDE_INSTALL_DIR})
-else(DEFINED INCLUDE_INSTALL_DIR)
-  set(INCLUDE_INSTALL_DIR include)
-  set(includedir ${CMAKE_INSTALL_PREFIX}/${INCLUDE_INSTALL_DIR})
-endif(DEFINED INCLUDE_INSTALL_DIR)
-
-if(NOT DEFINED SHARE_INSTALL_PREFIX)
-  set(SHARE_INSTALL_PREFIX share)
-endif(NOT DEFINED SHARE_INSTALL_PREFIX)
+set(prefix ${CMAKE_INSTALL_PREFIX})
+set(exec_prefix \${prefix})
+set(includedir \${prefix}/${CMAKE_INSTALL_INCLUDEDIR})
+set(libdir \${prefix}/${CMAKE_INSTALL_LIBDIR})
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libfreefare.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libfreefare.pc @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libfreefare.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
 add_subdirectory(libfreefare)
 add_subdirectory(examples)
