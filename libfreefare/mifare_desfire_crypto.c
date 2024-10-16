@@ -499,7 +499,7 @@ mifare_cryto_postprocess_data(FreefareTag tag, void *data, ssize_t *nbytes, int 
 		    break;
 		}
 
-		edl = enciphered_data_length(tag, *nbytes - 1, communication_settings);
+		edl = enciphered_data_length(tag, *nbytes - 1, communication_settings | NO_CRC);
 		if (!(edata = malloc(edl)))
 		    abort();
 
